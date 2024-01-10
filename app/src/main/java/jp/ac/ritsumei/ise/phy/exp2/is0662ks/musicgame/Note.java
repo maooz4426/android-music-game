@@ -16,7 +16,7 @@ public class Note {
     private final static float Radius = 120.0f;
     public Note(float x){
         this.x = x;
-        this.y = 0;
+        this.y = -Radius;
     }
 
 
@@ -45,14 +45,11 @@ public class Note {
     }
 
     public float fallNotePos(){
-        return this.y = 1;
+
+        return this.y += 10;
     }
 
-    public void drawNote(Canvas c){
-        Paint p = new Paint();
-        p.setColor(Color.WHITE);
-        c.drawCircle(this.x,fallNotePos(),Radius,p);
-    }
+
 
 
 

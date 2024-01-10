@@ -157,14 +157,29 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
         return width / 8;
     }
 
+
 //ノーツ描写
 //    public void drawNote(Canvas c){
 //        c.drawCircle();
 //    }
 
-    public void startTestMusic(Canvas c){
-        Note test=new Note(setPush1());
-        test.drawNote(c);
+    public void drawNote(Note note, Canvas c){
+        Paint p = new Paint();
+        p.setColor(Color.WHITE);
+
+        float newY = note.getY() + 10; // 新しいy座標を取得
+
+        // 描画
+//        c.drawColor(Color.BLACK);
+        c.drawCircle(note.getX(), newY, Radius, p);
+
+        // y座標を更新
+        note.setY(newY);
+    }
+
+    public void startTestMusic(Note note,Canvas c){
+
+        drawNote(note,c);
     }
 
 //    public void pushReset(){
@@ -188,11 +203,14 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
         push2 = false;
         push3 = false;
         push4 = false;
-
+        Canvas c = sHolder.lockCanvas();
+        judgeCircle(c);
+        Note test=new Note(setPush1());
+        sHolder.unlockCanvasAndPost(c);
         long sTime = System.currentTimeMillis() ; // 開始時の現在時刻
         while (thread != null) {
             try {
-                Canvas c = sHolder.lockCanvas();
+                c = sHolder.lockCanvas();
                 loopC++ ;
 //               judgeCircle();
                judgeCircle(c);
@@ -219,7 +237,7 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
 
 //                ゲーム開始
                 if(true){
-//                    startTestMusic(c);
+                    startTestMusic(test,c);
                 }
 
                 sHolder.unlockCanvasAndPost(c);
