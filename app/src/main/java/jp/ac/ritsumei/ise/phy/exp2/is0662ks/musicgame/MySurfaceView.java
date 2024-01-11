@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -60,9 +61,28 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
     private final static float Radius = 120.0f;
     public float width,height;//画面の横幅取得
     public float pointX,pointY;//押した場所を格納
-    public boolean push1,push2,push3,push4 ;
+    private boolean push1,push2,push3,push4 ;
+
 
     public long sTimePush1,sTimePush2,sTimePush3,sTimePush4;
+
+    public void judge(Canvas c,Note note,long currentTime){
+        Paint YellowP = new Paint();
+        YellowP.setColor(Color.YELLOW);
+        YellowP.setTextSize(100);
+        if(push1){
+            if(note.getX()==setPush1()){
+                //フレーム判定
+                long noteTime = note.getAppearTime();
+                long timingDifference = Math.abs(currentTime - noteTime);
+                System.out.println(timingDifference);
+                if(timingDifference <= 60){
+                    c.drawText("perfect",(width/2)-150,(height/2),YellowP);
+
+                }
+            }
+        }
+    }
     public void judgeCircle(Canvas c) {
 
 //                Canvas c = sHolder.lockCanvas();
@@ -110,6 +130,16 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
 //               sHolder.unlockCanvasAndPost(c);
     }
 
+    //x座標の設定
+    public float setPush1(){
+        return width / 8;
+    }
+
+    public float getPush1(){
+        return 4 * height / 5;
+    }
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -153,19 +183,10 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
         }
     }
 
-    public float setPush1(){
-        return width / 8;
-    }
-
-
 //ノーツ描写
-//    public void drawNote(Canvas c){
-//        c.drawCircle();
-//    }
-
     public void drawNote(Note note, Canvas c){
         Paint p = new Paint();
-        p.setColor(Color.WHITE);
+        p.setColor(Color.CYAN);
 
         float newY = note.getY() + 10; // 新しいy座標を取得
 
@@ -178,7 +199,6 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
     }
 
     public void startTestMusic(Note note,Canvas c){
-
         drawNote(note,c);
     }
 
@@ -205,7 +225,9 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
         push4 = false;
         Canvas c = sHolder.lockCanvas();
         judgeCircle(c);
-        Note test=new Note(setPush1());
+
+        Note test=new Note(setPush1(),2000);
+
         sHolder.unlockCanvasAndPost(c);
         long sTime = System.currentTimeMillis() ; // 開始時の現在時刻
         while (thread != null) {
@@ -213,7 +235,9 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
                 c = sHolder.lockCanvas();
                 loopC++ ;
 //               judgeCircle();
+
                judgeCircle(c);
+               judge(c,test, System.currentTimeMillis() - sTime);
                 wTime = (loopC * FTIME) - (System.currentTimeMillis() - sTime) ;
                 if (wTime > 0) {
                     Thread.sleep(wTime) ;
