@@ -10,15 +10,14 @@ import androidx.annotation.NonNull;
 
 public class Note {
     private float x,y;
-    private float speed;
-    private float spawnTime;
+    private long appearTime;
     private boolean active;
     private final static float Radius = 120.0f;
-    public Note(float x){
+    public Note(float x,long appearTime){
         this.x = x;
-        this.y = 0;
+        this.y = -Radius;
+        this.appearTime = appearTime;
     }
-
 
     public float getX(){
         return this.x;
@@ -36,23 +35,19 @@ public class Note {
         this.y = y;
     }
 
-    public void setSpeed(float speed){
-        this.speed = speed;
+    public void setAppearTime(long appearTime){
+        this.appearTime = appearTime;
     }
 
-    public void setSpawnTime(float spawnTime){
-        this.spawnTime = spawnTime;
+    public long getAppearTime(){
+        return this.appearTime;
     }
-
     public float fallNotePos(){
-        return this.y = 1;
+
+        return this.y += 10;
     }
 
-    public void drawNote(Canvas c){
-        Paint p = new Paint();
-        p.setColor(Color.WHITE);
-        c.drawCircle(this.x,fallNotePos(),Radius,p);
-    }
+
 
 
 
